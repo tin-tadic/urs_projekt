@@ -19,8 +19,8 @@ public class CodeController {
 
     @GetMapping("getAll")
     public List<Code> getAllCodes(Authentication authentication) {
-//        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-//        System.out.println("Retrieved user with authorities: " + userDetails.getUsername());
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        System.out.println("Retrieved user with authorities: " + userDetails.getUsername());
         return codeRepository.findAll();
     }
 

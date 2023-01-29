@@ -15,11 +15,10 @@ import java.time.Instant;
 @Data
 public class Code {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     private String code;
 
     private Instant validUntil;
-
 }
