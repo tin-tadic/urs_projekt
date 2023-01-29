@@ -1,6 +1,7 @@
-CREATE TABLE IF NOT EXISTS `something` (
+CREATE TABLE IF NOT EXISTS `code` (
 
 `id` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
-`title` varchar(20)
+`code` varchar(20),
+`valid_until` DATETIME
 
 )ENGINE=InnoDB DEFAULT CHARSET=UTF8;

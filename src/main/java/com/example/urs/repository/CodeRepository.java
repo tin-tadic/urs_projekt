@@ -1,10 +1,10 @@
 package com.example.urs.repository;
 
-import com.example.urs.model.Something;
+import com.example.urs.model.Code;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface SomeRepository extends JpaRepository<Something, Integer> {
+public interface CodeRepository extends JpaRepository<Code, Integer> {
 
 }

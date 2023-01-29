@@ -1,23 +1,24 @@
 package com.example.urs.model;
 
+
+import lombok.*;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+
+import java.time.Instant;
+
 
 @Entity
-@Getter
-@Setter
-@NoArgsConstructor
-@ToString
-public class Something {
+@Data
+public class Code {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
-    private String title;
+    private String code;
+
+    private Instant validUntil;
+
 }
