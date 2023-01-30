@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Users</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+    <link rel="stylesheet" href="../css/shards.min.css">
+</head>
+<body>
+
+<div class="container my-5">
+    <form action="#" th:action="@{/generate}" th:object="${codeDTO}" method="post">
+        <label for="validMinutes">Valid for minutes</label>
+        <input type="submit" value="Add User">
+        <select th:field="*{validMinutes}" id="validMinutes">
+            <option th:value="1" th:text="1"></option>
+            <option th:value="2" th:text="2"></option>
+            <option th:value="5" th:text="5"></option>
+            <option th:value="10" th:text="10"></option>
+            <option th:value="20" th:text="20"></option>
+            <option th:value="30" th:text="30"></option>
+            <option th:value="60" th:text="60"></option>
+        </select>
+    </form>
+</div>
+</body>
+</html>
