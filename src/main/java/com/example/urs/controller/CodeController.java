@@ -1,6 +1,7 @@
 package com.example.urs.controller;
 
 import com.example.urs.dto.AddCodeDTO;
+import com.example.urs.dto.ParticipantDTO;
 import com.example.urs.model.Code;
 import com.example.urs.repository.CodeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,9 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
-import java.util.List;
-import java.util.Optional;
-import java.util.Random;
+import java.util.*;
 
 @Controller
 public class CodeController {
@@ -61,13 +60,43 @@ public class CodeController {
     }
 
     @GetMapping("/delete/{id}")
-    public String deleteCode(@PathVariable("id") long id) {
+    public String deleteCode(@PathVariable("id") long id, Authentication authentication) {
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+
         Optional<Code> code = codeRepository.findById(id);
 
-        if (code.isPresent()) {
+        // Prevents deleting other users' codes
+        if (code.isPresent() && Objects.equals(code.get().getOwner(), userDetails.getUsername())) {
             codeRepository.delete(code.get());
         }
 
         return "redirect:/";
     }
+
+    @GetMapping("/codeDetails/{id}")
+    public String codeDetails(@PathVariable("id") long id, Authentication authentication, Model model) {
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+
+        Optional<Code> code = codeRepository.findById(id);
+
+        // No code or other user's code
+        if (code.isEmpty() || !Objects.equals(code.get().getOwner(), userDetails.getUsername())) {
+            return "redirect:/";
+        }
+
+        List<ParticipantDTO> participantDTOs = new ArrayList<>();
+        for (String participant : code.get().getListOfParticipants()) {
+            participantDTOs.add(
+                    new ParticipantDTO(participant)
+            );
+        }
+
+        model.addAttribute("code", code.get());
+        model.addAttribute("participants", participantDTOs);
+        model.addAttribute("user", userDetails);
+
+        return "codeDetails";
+    }
+
+
 }

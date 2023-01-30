@@ -74,46 +74,21 @@ li a:hover:not(.active) {
 </div>
 
 
-<div th:switch="${codes}" class="container my-5">
+<div th:switch="${participants}" class="container my-5">
     <div class="row">
         <div class="col-md-6">
-            <h2 th:case="null">No codes generated yet!</h2>
+            <h2 th:case="null">No participants generated yet!</h2>
             <div th:case="*">
-                <h2 class="my-5">Codes</h2>
-                <form action="#" th:action="@{/generate}" th:object="${addCodeDTO}" method="post">
-                    <label for="validMinutes">Generate a new code: </label>
-                    <select th:field="*{validMinutes}" id="validMinutes">
-                        <option th:value="1" th:text="'1 minute'"></option>
-                        <option th:value="2" th:text="'2 minutes'"></option>
-                        <option th:value="5" th:text="'5 minutes'"></option>
-                        <option th:value="10" th:text="'10 minutes'"></option>
-                        <option th:value="20" th:text="'20 minutes'"></option>
-                        <option th:value="30" th:text="'30 minutes'"></option>
-                        <option th:value="60" th:text="'60 minutes'"></option>
-                    </select>
-                    <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-plus"></i>
-                    </button>
-                </form>
-
+                <h2 class="my-5">Participants for <span th:text="${code.code}"></span></h2>
                 <table class="table table-striped table-responsive-md">
                     <thead>
                     <tr>
                         <th>Name</th>
-                        <th>Valid Until</th>
-                        <th>View</th>
-                        <th>Delete</th>
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="code : ${codes}">
-                        <td th:text="${code.code}"></td>
-                        <td th:text="${code.validUntil}"></td>
-                        <td><a th:href="@{/codeDetails/{id}(id=${code.id})}" class="btn btn-primary"><i
-                                class="fas fa-eye"></i></a></td>
-                        <td><a th:href="@{/delete/{id}(id=${code.id})}" class="btn btn-primary"><i
-                                class="fas fa-trash-alt"></i></a></td>
-                    </tr>
+                    <tr th:each="participant : ${participants}">
+                        <td th:text="${participant.participant}"></td>
                     </tbody>
                 </table>
             </div>

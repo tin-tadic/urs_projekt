@@ -31,6 +31,9 @@ public class Code {
     }
 
     public ArrayList<String> getListOfParticipants() {
+        if (this.participants == null) {
+            return new ArrayList<>();
+        };
         return new ArrayList<>(Arrays.asList(this.participants.split("\\|")));
     }
 }
