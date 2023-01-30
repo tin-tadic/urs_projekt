@@ -1,5 +1,6 @@
 package com.example.urs.model;
 
+import com.sun.istack.NotNull;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -35,5 +36,13 @@ public class Code {
             return new ArrayList<>();
         };
         return new ArrayList<>(Arrays.asList(this.participants.split("\\|")));
+    }
+
+    public void addParticipant(@NotNull String participant) {
+        if (this.participants == null) {
+            this.participants = participant;
+        } else {
+            this.participants = this.participants.concat("|").concat(participant);
+        }
     }
 }

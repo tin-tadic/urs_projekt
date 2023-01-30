@@ -3,8 +3,11 @@ package com.example.urs.controller;
 import com.example.urs.dto.AddCodeDTO;
 import com.example.urs.dto.ParticipantDTO;
 import com.example.urs.model.Code;
+import com.example.urs.model.SubmitPresenceDTO;
 import com.example.urs.repository.CodeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
@@ -12,8 +15,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.time.Instant;
+import java.time.ZoneOffset;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 
@@ -47,6 +52,12 @@ public class CodeController {
                 .limit(targetStringLength)
                 .collect(StringBuilder::new, StringBuilder::appendCodePoint, StringBuilder::append)
                 .toString().toUpperCase();
+
+        // Extra security to code uniqueness
+        generatedCode = generatedCode.concat(String.valueOf(Instant.now().atZone(ZoneOffset.UTC).getYear()));
+        generatedCode = generatedCode.concat(String.valueOf(Instant.now().atZone(ZoneOffset.UTC).getDayOfYear()));
+        generatedCode = generatedCode.concat(String.valueOf(Instant.now().atZone(ZoneOffset.UTC).getMinute()));
+
 
         codeRepository.save(
                 new Code(
@@ -98,5 +109,20 @@ public class CodeController {
         return "codeDetails";
     }
 
+    @PostMapping("/submitPresence")
+    public ResponseEntity<String> submitPresence(@RequestBody SubmitPresenceDTO submitPresenceDTO) {
+        Optional<Code> optionalCode = codeRepository.findByCode(submitPresenceDTO.getCode());
 
+        if (optionalCode.isEmpty()) {
+            return new ResponseEntity<>("No code", HttpStatus.OK);
+        } else if ((optionalCode.get().getValidUntil().compareTo(Instant.now())) < 0) {
+            return new ResponseEntity<>("Code is no longer valid.", HttpStatus.OK);
+        }
+        Code code = optionalCode.get();
+
+        code.addParticipant(submitPresenceDTO.getName());
+        codeRepository.save(code);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

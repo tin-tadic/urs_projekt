@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS `code` (
 
 `id` int NOT NULL AUTO_INCREMENT PRIMARY KEY,
-`code` varchar(20),
+`code` varchar(20) UNIQUE,
 `valid_until` DATETIME,
 `owner` varchar(20) NOT NULL,
 `participants` varchar(500)
