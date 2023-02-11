@@ -123,7 +123,7 @@ public class CodeController {
 
         // is code valid
         if (optionalCode.isEmpty()) {
-            return new ResponseEntity<>("No code", HttpStatus.OK);
+            return new ResponseEntity<>("Invalid code", HttpStatus.OK);
         } else if ((optionalCode.get().getValidUntil().compareTo(Instant.now())) < 0) {
             return new ResponseEntity<>("Code is no longer valid.", HttpStatus.OK);
         }
