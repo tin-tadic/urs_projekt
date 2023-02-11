@@ -146,6 +146,6 @@ public class CodeController {
         code.addParticipant(submitPresenceDTO.getUsername());
         codeRepository.save(code);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>("Success!", HttpStatus.OK);
     }
 }
