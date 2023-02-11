@@ -8,7 +8,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SubmitPresenceDTO {
-    private String name;
+    private String username;
+
+    private String password;
 
     private String code;
 }

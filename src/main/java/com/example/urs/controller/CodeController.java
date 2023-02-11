@@ -4,12 +4,15 @@ import com.example.urs.dto.AddCodeDTO;
 import com.example.urs.dto.ParticipantDTO;
 import com.example.urs.model.Code;
 import com.example.urs.model.SubmitPresenceDTO;
+import com.example.urs.model.User;
 import com.example.urs.repository.CodeRepository;
+import com.example.urs.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,6 +29,11 @@ import java.util.*;
 public class CodeController {
     @Autowired
     CodeRepository codeRepository;
+
+    @Autowired
+    UserRepository userRepository;
+
+    private static final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder(8);
 
     @GetMapping("/")
     public String getAllCodes(Model model, Authentication authentication, AddCodeDTO addCodeDTO) {
@@ -113,6 +121,7 @@ public class CodeController {
     public ResponseEntity<String> submitPresence(@RequestBody SubmitPresenceDTO submitPresenceDTO) {
         Optional<Code> optionalCode = codeRepository.findByCode(submitPresenceDTO.getCode());
 
+        // is code valid
         if (optionalCode.isEmpty()) {
             return new ResponseEntity<>("No code", HttpStatus.OK);
         } else if ((optionalCode.get().getValidUntil().compareTo(Instant.now())) < 0) {
@@ -120,7 +129,21 @@ public class CodeController {
         }
         Code code = optionalCode.get();
 
-        code.addParticipant(submitPresenceDTO.getName());
+        // does user exist
+        Optional<User> optionalUser = userRepository.findByUsername(submitPresenceDTO.getUsername());
+        User user = null;
+        if (optionalUser.isEmpty()) {
+            return new ResponseEntity<>("User not found", HttpStatus.OK);
+        } else {
+            user = optionalUser.get();
+        }
+
+        // is password valid
+        if (!passwordEncoder.matches(submitPresenceDTO.getPassword(), user.getPassword())) {
+            return new ResponseEntity<>("Password invalid", HttpStatus.OK);
+        }
+
+        code.addParticipant(submitPresenceDTO.getUsername());
         codeRepository.save(code);
 
         return new ResponseEntity<>(HttpStatus.OK);

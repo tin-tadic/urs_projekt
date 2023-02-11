@@ -42,7 +42,10 @@ public class Code {
         if (this.participants == null) {
             this.participants = participant;
         } else {
-            this.participants = this.participants.concat("|").concat(participant);
+            // Don't duplicate participants
+            if (! this.participants.contains(participant)) {
+                this.participants = this.participants.concat("|").concat(participant);
+            }
         }
     }
 }
